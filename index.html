@@ -227,6 +227,70 @@
 
   .chip.platform-chip.active { background: var(--platform-color, var(--accent)); border-color: var(--platform-color, var(--accent)); color: #fff; }
 
+  /* Age filter bar */
+  #age-bar {
+    padding: 12px 40px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    font-size: 0.72rem;
+  }
+
+  .age-chip {
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-size: 0.72rem;
+    font-family: 'DM Mono', monospace;
+    cursor: pointer;
+    transition: all .18s;
+    white-space: nowrap;
+  }
+
+  .age-chip:hover { border-color: #f59e0b; color: #f59e0b; }
+  .age-chip.active { border-color: #f59e0b; background: #f59e0b; color: #111; font-weight: 500; }
+
+  .culte-box {
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: #f5f4f0;
+    border-left: 3px solid var(--accent);
+    border-radius: 0 4px 4px 0;
+    font-size: 0.78rem;
+    line-height: 1.6;
+    color: var(--text);
+    white-space: pre-line;
+  }
+
+  .culte-box h4 {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+
+  .age-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    background: #fef3c7;
+    border: 1px solid #f59e0b;
+    color: #92400e;
+    font-size: 0.68rem;
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+    margin-top: 6px;
+  }
+
   select#sort-select {
     padding: 7px 12px;
     background: #faf9f5;
@@ -625,6 +689,12 @@
   <p style="margin-top:8px;font-size:0.78rem;">Ou cliquez sur <strong>⚡ Charger données démo</strong> pour voir un aperçu avec des données simulées.</p>
 </div>
 
+<!-- ── AGE FILTER BAR ── -->
+<div id="age-bar" style="display:none">
+  <span style="color:var(--muted);font-family:'DM Mono',monospace;font-size:0.7rem;margin-right:4px">👶 Âge :</span>
+  <button class="age-chip active" data-age="all">Tous</button>
+</div>
+
 <!-- ── GRID ── -->
 <div id="grid" style="display:none"></div>
 
@@ -687,6 +757,7 @@ let allFilms = [];
 let filteredFilms = [];
 let activeFilter = "all";
 let activePlatform = null;
+let activeAge = "all";
 let searchQuery = "";
 let sortMode = "alpha";
 
@@ -813,6 +884,15 @@ function applyFilters() {
     films = films.filter(f => Object.keys(f.platforms||{}).includes(activePlatform));
   }
 
+  if (activeAge !== "all") {
+    const maxAge = parseInt(activeAge);
+    films = films.filter(f => {
+      const ef = f.enfant_friendly || "";
+      const match = ef.match(/\d+/);
+      return match && parseInt(match[0]) <= maxAge;
+    });
+  }
+
   if (sortMode === "alpha")           films.sort((a,b) => (a.titre||"").localeCompare(b.titre||"","fr"));
   if (sortMode === "year_asc")        films.sort((a,b) => (parseInt(a.annee)||0)-(parseInt(b.annee)||0));
   if (sortMode === "year_desc")       films.sort((a,b) => (parseInt(b.annee)||0)-(parseInt(a.annee)||0));
@@ -879,6 +959,7 @@ function openModal(film) {
   const bg = document.getElementById("modal-bg");
   const header = document.getElementById("modal-header");
   const body = document.getElementById("modal-body");
+  body.innerHTML = "";
   const poster = film.affiche_url || film.jw_poster || "";
   const platforms = film.platforms || {};
   const year = film.annee || film.jw_year || "—";
@@ -892,6 +973,7 @@ function openModal(film) {
       <div class="modal-director">Réal. ${film.realisateur||"Inconnu"}</div>
       <div class="modal-year">${year} · ${film.duree||"—"} · ${film.pays||"—"}</div>
       <div class="modal-genre">${film.genre||""}</div>
+      ${film.enfant_friendly ? `<div class="age-badge">👶 ${film.enfant_friendly}</div>` : ""}
     </div>
   `;
 
@@ -932,9 +1014,19 @@ function openModal(film) {
     return { url: null, direct: false };
   }
 
+  // Section "Pourquoi ce film est culte ?"
+  if (film.culte) {
+    const culteDiv = document.createElement("div");
+    culteDiv.className = "culte-box";
+    culteDiv.innerHTML = `<h4>Pourquoi ce film est culte ?</h4>${film.culte.replace(/
+/g, '<br>')}`;
+    body.appendChild(culteDiv);
+  }
+
   const platEntries = Object.entries(platforms);
+  const platSection = document.createElement("div");
   if (platEntries.length === 0) {
-    body.innerHTML = `
+    platSection.innerHTML = `
       <h3>Disponibilité streaming</h3>
       <div class="modal-no-streaming">❌ Non disponible sur les plateformes surveillées</div>
     `;
@@ -966,11 +1058,12 @@ function openModal(film) {
       `;
     }).join("");
 
-    body.innerHTML = `
+    platSection.innerHTML = `
       <h3>Disponible sur ${platEntries.length} plateforme${platEntries.length>1?"s":""}</h3>
       <div class="modal-platforms">${rows}</div>
     `;
   }
+  body.appendChild(platSection);
 
   bg.classList.add("open");
 }
