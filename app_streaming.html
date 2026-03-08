@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>16/9 — Streaming France</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #f5f4f0;
+    --surface:  #eeede9;
+    --card:     #e8e7e3;
+    --border:   #d0cfc9;
+    --accent:   #111110;
+    --accent2:  #555550;
+    --text:     #111110;
+    --muted:    #888880;
+    --radius:   4px;
+
+    --netflix:  #e50914;
+    --prime:    #00a8e1;
+    --disney:   #113ccf;
+    --canal:    #000000;
+    --appletv:  #a2aaad;
+    --max:      #002be7;
+    --mubi:     #1c1c1c;
+    --arte:     #f97316;
+    --francetv: #003189;
+    --tubi:     #fa4f1e;
+    --pluto:    #f5c518;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 28px 40px 24px;
+    display: flex;
+    align-items: flex-end;
+    gap: 32px;
+    position: sticky;
+    top: 0;
+    background: rgba(245,244,240,0.96);
+    backdrop-filter: blur(12px);
+    z-index: 100;
+    flex-wrap: wrap;
+  }
+
+  .header-title {
+    flex: 0 0 auto;
+  }
+
+  .header-title h1 {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .header-title p {
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .header-stats {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .stat-num {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 1.6rem;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .header-right {
+    margin-left: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-end;
+  }
+
+  /* ── UPLOAD ZONE ── */
+  #upload-zone {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 10px 18px;
+    cursor: pointer;
+    transition: border-color .2s, background .2s;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--muted);
+    background: transparent;
+    min-width: 220px;
+  }
+
+  #upload-zone:hover, #upload-zone.drag-over {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(232,197,71,0.05);
+  }
+
+  #upload-zone strong { display: block; font-size: 0.72rem; color: var(--text); margin-bottom: 2px; font-weight: 500; }
+
+  #file-input { display: none; }
+
+  /* ── DEMO BUTTON ── */
+  #demo-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 6px 14px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 0.72rem;
+    font-family: 'DM Mono', monospace;
+    transition: all .2s;
+    letter-spacing: 0.05em;
+  }
+
+  #demo-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* ── FILTERS ── */
+  #controls {
+    padding: 20px 40px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+    background: #eceae5;
+  }
+
+  .search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+    max-width: 340px;
+  }
+
+  .search-wrap svg {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.4;
+  }
+
+  #search-input {
+    width: 100%;
+    padding: 9px 12px 9px 36px;
+    background: #faf9f5;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    outline: none;
+    transition: border-color .2s;
+  }
+
+  #search-input:focus { border-color: var(--accent); }
+
+  .filter-chips {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .chip {
+    padding: 6px 13px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-size: 0.75rem;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: all .2s;
+    white-space: nowrap;
+    letter-spacing: 0.03em;
+  }
+
+  .chip:hover { border-color: var(--accent); color: var(--accent); }
+  .chip.active {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: #f5f4f0;
+    font-weight: 500;
+  }
+
+  .chip.platform-chip.active { background: var(--platform-color, var(--accent)); border-color: var(--platform-color, var(--accent)); color: #fff; }
+
+  select#sort-select {
+    padding: 7px 12px;
+    background: #faf9f5;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    outline: none;
+    cursor: pointer;
+    margin-left: auto;
+  }
+
+  /* ── PLATFORM FILTER BAR ── */
+  #platform-bar {
+    padding: 14px 40px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+  }
+
+  .platform-pill {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    font-size: 0.75rem;
+    transition: all .18s;
+    background: transparent;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    white-space: nowrap;
+  }
+
+  .platform-pill .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .platform-pill:hover { color: var(--text); border-color: #555; }
+  .platform-pill.active { color: var(--text); border-color: #888; background: rgba(255,255,255,0.05); }
+  .platform-pill.active .dot { box-shadow: 0 0 0 2px rgba(255,255,255,0.2); }
+
+  .platform-pill .count-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--muted);
+  }
+
+  /* ── EMPTY / LOADING STATE ── */
+  #empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 40px;
+    gap: 16px;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  #empty-state .big-icon { font-size: 3rem; }
+  #empty-state h2 { font-family: 'Unbounded', sans-serif; font-size: 1.6rem; color: var(--text); letter-spacing: 0.06em; }
+  #empty-state p { font-size: 0.85rem; max-width: 400px; line-height: 1.6; }
+
+  /* ── GRID ── */
+  #grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    padding: 0;
+  }
+
+  /* ── CARD ── */
+  .film-card {
+    background: #f5f4f0;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: background .15s;
+  }
+
+  .film-card:hover { background: #faf9f5; }
+
+  .film-card:hover .card-overlay { opacity: 1; }
+
+  .poster-wrap {
+    position: relative;
+    aspect-ratio: 2/3;
+    background: #dddcd7;
+    overflow: hidden;
+  }
+
+  .poster-wrap img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .3s ease;
+  }
+
+  .film-card:hover .poster-wrap img { transform: scale(1.04); }
+
+  .poster-placeholder {
+    width: 100%; height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--muted);
+    font-size: 0.7rem;
+    text-align: center;
+    padding: 12px;
+    background: #e0dfd9;
+  }
+
+  .poster-placeholder .film-icon { font-size: 2rem; opacity: 0.3; }
+
+  /* Platform badges on poster */
+  .platform-badges {
+    position: absolute;
+    bottom: 8px; left: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    max-width: calc(100% - 16px);
+  }
+
+  .plat-badge {
+    font-size: 0.6rem;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: 500;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.03em;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  }
+
+  .not-available-badge {
+    position: absolute;
+    top: 8px; right: 8px;
+    background: rgba(245,244,240,0.85);
+    color: var(--muted);
+    font-size: 0.6rem;
+    font-family: 'DM Mono', monospace;
+    padding: 3px 7px;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+  }
+
+  .card-info {
+    padding: 12px 14px 14px;
+  }
+
+  .card-title {
+    font-size: 0.82rem;
+    font-weight: 500;
+    line-height: 1.3;
+    margin-bottom: 4px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card-meta {
+    font-size: 0.68rem;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.02em;
+  }
+
+  /* Card overlay on hover */
+  .card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(17,17,16,0.88) 0%, transparent 55%);
+    opacity: 0;
+    transition: opacity .2s;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 16px;
+    gap: 4px;
+  }
+
+  .card-overlay .ov-title {
+    font-weight: 500;
+    font-size: 0.82rem;
+    line-height: 1.3;
+  }
+
+  .card-overlay .ov-director {
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+
+  .card-overlay .ov-genre {
+    font-size: 0.68rem;
+    color: var(--accent);
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* ── MODAL ── */
+  #modal-bg {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(17,17,16,0.6);
+    backdrop-filter: blur(6px);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  #modal-bg.open { display: flex; }
+
+  #modal {
+    background: #faf9f6;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    width: 100%;
+    max-width: 640px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+  }
+
+  .modal-header {
+    display: flex;
+    gap: 20px;
+    padding: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .modal-poster {
+    width: 100px;
+    flex-shrink: 0;
+    aspect-ratio: 2/3;
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--surface);
+  }
+
+  .modal-poster img { width: 100%; height: 100%; object-fit: cover; }
+
+  .modal-info { flex: 1; }
+  .modal-info h2 { font-family: 'Unbounded', sans-serif; font-size: 1.5rem; letter-spacing: 0.06em; line-height: 1.1; color: var(--accent); }
+  .modal-info .modal-director { font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
+  .modal-info .modal-year { font-family: 'DM Mono', monospace; font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+  .modal-info .modal-genre { font-size: 0.72rem; color: var(--text); margin-top: 8px; line-height: 1.4; opacity: 0.7; }
+  .modal-info .modal-country { font-size: 0.72rem; color: var(--muted); margin-top: 4px; }
+
+  .modal-body { padding: 20px 24px 24px; }
+  .modal-body h3 { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); margin-bottom: 12px; }
+
+  .modal-platforms { display: flex; flex-direction: column; gap: 8px; }
+
+  .modal-platform-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 6px;
+    background: #f0efeb;
+    border: 1px solid var(--border);
+  }
+
+  .modal-platform-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .modal-platform-name { font-weight: 500; font-size: 0.82rem; flex: 1; }
+  .modal-platform-type { font-size: 0.72rem; font-family: 'DM Mono', monospace; color: var(--muted); }
+
+  .modal-no-streaming {
+    padding: 20px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.82rem;
+    border: 1px dashed var(--border);
+    border-radius: 6px;
+    background: #f0efeb;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 14px; right: 16px;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 1.2rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px 8px;
+    transition: color .15s;
+  }
+
+  .modal-close:hover { color: var(--text); }
+
+  /* ── FOOTER PAGINATION / COUNT ── */
+  #footer-bar {
+    padding: 14px 40px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: #eceae5;
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+  }
+
+  #results-count strong { color: var(--accent); }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--surface); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="header-title">
+    <div style="display:flex;align-items:center;gap:14px">
+      <img src="data:image/jpeg;base64,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" alt="16/9" style="height:52px;width:auto;object-fit:contain;filter:grayscale(10%);border-radius:3px">
+      <div>
+        <h1>16/9</h1>
+        <p>Disponibilité streaming · France</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="header-stats" id="header-stats">
+    <div class="stat"><span class="stat-num" id="s-total">—</span><span class="stat-label">Films</span></div>
+    <div class="stat"><span class="stat-num" id="s-available">—</span><span class="stat-label">En streaming</span></div>
+    <div class="stat"><span class="stat-num" id="s-pct">—</span><span class="stat-label">Couverture</span></div>
+  </div>
+
+  <div class="header-right">
+    <label id="upload-zone" for="file-input">
+      <strong>📂 Charger resultats.json</strong>
+      Glissez ou cliquez pour importer
+    </label>
+    <input type="file" id="file-input" accept=".json">
+    <button id="demo-btn">⚡ Charger données démo</button>
+  </div>
+</header>
+
+<!-- ── CONTROLS ── -->
+<div id="controls">
+  <div class="search-wrap">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="search-input" placeholder="Rechercher un film, réalisateur…">
+  </div>
+
+  <div class="filter-chips">
+    <button class="chip active" data-filter="all">Tous</button>
+    <button class="chip" data-filter="available">Disponibles</button>
+    <button class="chip" data-filter="unavailable">Non disponibles</button>
+    <button class="chip" data-filter="free">Gratuits</button>
+    <button class="chip" data-filter="sub">Abonnement</button>
+  </div>
+
+  <select id="sort-select">
+    <option value="alpha">A → Z</option>
+    <option value="year_asc">Année ↑</option>
+    <option value="year_desc">Année ↓</option>
+    <option value="platforms_desc">+ de plateformes</option>
+  </select>
+</div>
+
+<!-- ── PLATFORM FILTER BAR ── -->
+<div id="platform-bar"></div>
+
+<!-- ── EMPTY STATE ── -->
+<div id="empty-state">
+  <div class="big-icon">🎬</div>
+  <h2>Importez vos résultats</h2>
+  <p>Lancez d'abord <code style="background:var(--surface);padding:2px 6px;border-radius:3px;font-size:0.8em">scraper_justwatch.py</code> sur votre machine pour générer <strong>resultats.json</strong>, puis importez-le ici.</p>
+  <p style="margin-top:8px;font-size:0.78rem;">Ou cliquez sur <strong>⚡ Charger données démo</strong> pour voir un aperçu avec des données simulées.</p>
+</div>
+
+<!-- ── GRID ── -->
+<div id="grid" style="display:none"></div>
+
+<!-- ── FOOTER ── -->
+<div id="footer-bar" style="display:none">
+  <span id="results-count"></span>
+</div>
+
+<!-- ── MODAL ── -->
+<div id="modal-bg">
+  <div id="modal">
+    <button class="modal-close" id="modal-close">✕</button>
+    <div class="modal-header" id="modal-header"></div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// PLATFORM CONFIG
+// ─────────────────────────────────────────────
+const PLATFORMS = {
+  // ── Abonnement ──
+  "Netflix":     { color: "#e50914", free: false },
+  "Prime Video": { color: "#00a8e1", free: false },
+  "Disney+":     { color: "#113ccf", free: false },
+  "Canal+":      { color: "#333",    free: false },
+  "Apple TV+":   { color: "#555",    free: false },
+  "Max":         { color: "#002be7", free: false },
+  "Mubi":        { color: "#8b1a1a", free: false },
+  // ── Gratuit ──
+  "YouTube":     { color: "#ff0000", free: true  },
+  "Dailymotion": { color: "#0066dc", free: true  },
+  "OK.ru":       { color: "#ee8208", free: true  },
+  "Henri":       { color: "#2d2d2d", free: true  },
+  "TF1+":        { color: "#003f9f", free: true  },
+  "Arte":        { color: "#f97316", free: true  },
+  "France.tv":   { color: "#003189", free: true  },
+  "Tubi":        { color: "#fa4f1e", free: true  },
+  "Pluto TV":    { color: "#f5c518", free: true  },
+};
+
+const FREE_TYPES = ["Gratuit", "Gratuit avec pub", "Gratuit (FAST)"];
+
+function getPlatformColor(name) {
+  for (const [k, v] of Object.entries(PLATFORMS)) {
+    if (name.toLowerCase().includes(k.toLowerCase())) return v.color;
+  }
+  return "#888";
+}
+
+function isFreeOffer(types) {
+  return types.some(t => FREE_TYPES.includes(t));
+}
+
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+let allFilms = [];
+let filteredFilms = [];
+let activeFilter = "all";
+let activePlatform = null;
+let searchQuery = "";
+let sortMode = "alpha";
+
+// ─────────────────────────────────────────────
+// DEMO DATA GENERATOR
+// ─────────────────────────────────────────────
+function generateDemoData() {
+  const films = [
+    { titre: "Citizen Kane", realisateur: "Orson Welles", annee: "1941", genre: "Drame", pays: "États-Unis", duree: "1h59min",
+      platforms: { "Netflix": ["Abonnement inclus"] }, available: true,
+      affiche_url: "https://media.senscritique.com/media/000000028089/0/citizen_kane.jpg" },
+    { titre: "2001 : L'Odyssée de l'espace", realisateur: "Stanley Kubrick", annee: "1968", genre: "Science-fiction", pays: "Royaume-Uni", duree: "2h29min",
+      platforms: { "Arte": ["Gratuit"], "Prime Video": ["Abonnement inclus"] }, available: true,
+      affiche_url: "https://media.senscritique.com/media/000000034672/0/2001_l_odyssee_de_l_espace.jpg" },
+    { titre: "La Dolce Vita", realisateur: "Federico Fellini", annee: "1960", genre: "Drame", pays: "Italie", duree: "3h00min",
+      platforms: { "Mubi": ["Abonnement inclus"] }, available: true,
+      affiche_url: "" },
+    { titre: "Vertigo", realisateur: "Alfred Hitchcock", annee: "1958", genre: "Thriller", pays: "États-Unis", duree: "2h08min",
+      platforms: {}, available: false, affiche_url: "" },
+    { titre: "Tokyo Story", realisateur: "Yasujirō Ozu", annee: "1953", genre: "Drame", pays: "Japon", duree: "2h16min",
+      platforms: { "France.tv": ["Gratuit"] }, available: true, affiche_url: "" },
+    { titre: "Pulp Fiction", realisateur: "Quentin Tarantino", annee: "1994", genre: "Policier", pays: "États-Unis", duree: "2h34min",
+      platforms: { "Netflix": ["Abonnement inclus"], "Disney+": ["Abonnement inclus"] }, available: true,
+      affiche_url: "https://media.senscritique.com/media/000000048374/0/pulp_fiction.jpg" },
+    { titre: "Mulholland Drive", realisateur: "David Lynch", annee: "2001", genre: "Thriller", pays: "États-Unis", duree: "2h27min",
+      platforms: { "Canal+": ["Abonnement inclus"] }, available: true, affiche_url: "" },
+    { titre: "La Règle du jeu", realisateur: "Jean Renoir", annee: "1939", genre: "Drame", pays: "France", duree: "1h50min",
+      platforms: { "Arte": ["Gratuit"] }, available: true, affiche_url: "" },
+    { titre: "Metropolis", realisateur: "Fritz Lang", annee: "1927", genre: "Science-fiction", pays: "Allemagne", duree: "2h33min",
+      platforms: { "Tubi": ["Gratuit avec pub"], "Arte": ["Gratuit"] }, available: true, affiche_url: "" },
+    { titre: "Les 400 Coups", realisateur: "François Truffaut", annee: "1959", genre: "Drame", pays: "France", duree: "1h39min",
+      platforms: {}, available: false, affiche_url: "" },
+    { titre: "Parasite", realisateur: "Bong Joon-ho", annee: "2019", genre: "Thriller", pays: "Corée du Sud", duree: "2h12min",
+      platforms: { "Prime Video": ["Abonnement inclus"] }, available: true,
+      affiche_url: "https://media.senscritique.com/media/000018859635/0/parasite.jpg" },
+    { titre: "Blade Runner", realisateur: "Ridley Scott", annee: "1982", genre: "Science-fiction", pays: "États-Unis", duree: "1h57min",
+      platforms: { "Max": ["Abonnement inclus"] }, available: true, affiche_url: "" },
+    { titre: "Roma", realisateur: "Alfonso Cuarón", annee: "2018", genre: "Drame", pays: "Mexique", duree: "2h15min",
+      platforms: { "Netflix": ["Abonnement inclus"] }, available: true,
+      affiche_url: "https://media.senscritique.com/media/000017527310/0/roma.jpg" },
+    { titre: "Amadeus", realisateur: "Miloš Forman", annee: "1984", genre: "Drame", pays: "États-Unis", duree: "2h40min",
+      platforms: {}, available: false, affiche_url: "" },
+    { titre: "La Grande Illusion", realisateur: "Jean Renoir", annee: "1937", genre: "Guerre", pays: "France", duree: "1h54min",
+      platforms: { "France.tv": ["Gratuit"] }, available: true, affiche_url: "" },
+    { titre: "The Godfather", realisateur: "Francis Ford Coppola", annee: "1972", genre: "Policier", pays: "États-Unis", duree: "2h55min",
+      platforms: { "Prime Video": ["Abonnement inclus"], "Canal+": ["Abonnement inclus"] }, available: true, affiche_url: "" },
+    { titre: "Rashōmon", realisateur: "Akira Kurosawa", annee: "1950", genre: "Drame", pays: "Japon", duree: "1h28min",
+      platforms: { "Mubi": ["Abonnement inclus"] }, available: true, affiche_url: "" },
+    { titre: "Yi Yi", realisateur: "Edward Yang", annee: "2000", genre: "Drame", pays: "Taïwan", duree: "2h53min",
+      platforms: {}, available: false, affiche_url: "" },
+    { titre: "Alien", realisateur: "Ridley Scott", annee: "1979", genre: "Science-fiction", pays: "États-Unis", duree: "1h57min",
+      platforms: { "Disney+": ["Abonnement inclus"] }, available: true, affiche_url: "" },
+    { titre: "Portrait de la jeune fille en feu", realisateur: "Céline Sciamma", annee: "2019", genre: "Romance", pays: "France", duree: "2h01min",
+      platforms: { "Canal+": ["Abonnement inclus"], "Mubi": ["Abonnement inclus"] }, available: true, affiche_url: "" },
+  ];
+
+  const available = films.filter(f => f.available).length;
+  return {
+    generated_at: new Date().toISOString(),
+    total_films: films.length,
+    films_disponibles_streaming: available,
+    plateformes_cibles: Object.keys(PLATFORMS),
+    films,
+    _demo: true,
+  };
+}
+
+// ─────────────────────────────────────────────
+// RENDER
+// ─────────────────────────────────────────────
+function getPlatformCounts() {
+  const counts = {};
+  for (const film of allFilms) {
+    for (const name of Object.keys(film.platforms || {})) {
+      counts[name] = (counts[name] || 0) + 1;
+    }
+  }
+  return counts;
+}
+
+function renderPlatformBar() {
+  const bar = document.getElementById("platform-bar");
+  const counts = getPlatformCounts();
+  const sorted = Object.entries(counts).sort((a,b) => b[1]-a[1]);
+
+  bar.innerHTML = '<span style="font-size:0.7rem;color:var(--muted);font-family:DM Mono,monospace;align-self:center;margin-right:4px">Plateforme :</span>';
+
+  const allPill = document.createElement("button");
+  allPill.className = "platform-pill" + (activePlatform === null ? " active" : "");
+  allPill.innerHTML = `<span class="dot" style="background:#888"></span>Toutes <span class="count-badge">${allFilms.filter(f=>f.available).length}</span>`;
+  allPill.addEventListener("click", () => { activePlatform = null; applyFilters(); });
+  bar.appendChild(allPill);
+
+  for (const [name, count] of sorted) {
+    const color = getPlatformColor(name);
+    const pill = document.createElement("button");
+    pill.className = "platform-pill" + (activePlatform === name ? " active" : "");
+    pill.innerHTML = `<span class="dot" style="background:${color}"></span>${name} <span class="count-badge">${count}</span>`;
+    pill.addEventListener("click", () => {
+      activePlatform = activePlatform === name ? null : name;
+      applyFilters();
+    });
+    bar.appendChild(pill);
+  }
+}
+
+function applyFilters() {
+  let films = [...allFilms];
+
+  if (searchQuery) {
+    const q = searchQuery.toLowerCase();
+    films = films.filter(f =>
+      (f.titre||"").toLowerCase().includes(q) ||
+      (f.realisateur||"").toLowerCase().includes(q)
+    );
+  }
+
+  if (activeFilter === "available")   films = films.filter(f => f.available);
+  if (activeFilter === "unavailable") films = films.filter(f => !f.available);
+  if (activeFilter === "free")        films = films.filter(f => Object.values(f.platforms||{}).some(t => isFreeOffer(t)));
+  if (activeFilter === "sub")         films = films.filter(f => Object.values(f.platforms||{}).some(t => t.includes("Abonnement inclus")));
+
+  if (activePlatform) {
+    films = films.filter(f => Object.keys(f.platforms||{}).includes(activePlatform));
+  }
+
+  if (sortMode === "alpha")           films.sort((a,b) => (a.titre||"").localeCompare(b.titre||"","fr"));
+  if (sortMode === "year_asc")        films.sort((a,b) => (parseInt(a.annee)||0)-(parseInt(b.annee)||0));
+  if (sortMode === "year_desc")       films.sort((a,b) => (parseInt(b.annee)||0)-(parseInt(a.annee)||0));
+  if (sortMode === "platforms_desc")  films.sort((a,b) => Object.keys(b.platforms||{}).length-Object.keys(a.platforms||{}).length);
+
+  filteredFilms = films;
+  renderGrid();
+  renderPlatformBar();
+}
+
+function renderGrid() {
+  const grid = document.getElementById("grid");
+  const count = document.getElementById("results-count");
+  count.innerHTML = `<strong>${filteredFilms.length}</strong> film${filteredFilms.length>1?"s":""} affiché${filteredFilms.length>1?"s":""}`;
+
+  grid.innerHTML = "";
+
+  for (const film of filteredFilms) {
+    const card = document.createElement("div");
+    card.className = "film-card";
+    card.addEventListener("click", () => openModal(film));
+
+    const platforms = film.platforms || {};
+    const platformNames = Object.keys(platforms);
+    const poster = film.affiche_url || film.jw_poster || "";
+    const year = film.annee || film.jw_year || "—";
+
+    const badgesHTML = platformNames.slice(0,4).map(name => {
+      const color = getPlatformColor(name);
+      const short = name.replace("Prime Video","Prime").replace("France.tv","F.tv").replace("Apple TV+","Apple").replace("Disney+","D+").replace("Pluto TV","Pluto");
+      return `<span class="plat-badge" style="background:${color}cc">${short}</span>`;
+    }).join("");
+
+    const posterInner = poster
+      ? `<img src="${poster}" alt="${film.titre}" loading="lazy" onerror="this.parentNode.innerHTML='<div class=\\'poster-placeholder\\'><div class=\\'film-icon\\'>🎬</div><span>${film.titre}</span></div>'">`
+      : `<div class="poster-placeholder"><div class="film-icon">🎬</div><span>${film.titre}</span></div>`;
+
+    card.innerHTML = `
+      <div class="poster-wrap">
+        ${posterInner}
+        ${platformNames.length > 0
+          ? `<div class="platform-badges">${badgesHTML}</div>`
+          : `<div class="not-available-badge">Non dispo</div>`}
+      </div>
+      <div class="card-info">
+        <div class="card-title">${film.titre}</div>
+        <div class="card-meta">${film.realisateur || "—"} · ${year}</div>
+      </div>
+      <div class="card-overlay">
+        <div class="ov-title">${film.titre}</div>
+        <div class="ov-director">${film.realisateur || ""}</div>
+        <div class="ov-genre">${(film.genre||"").split(",")[0]}</div>
+      </div>
+    `;
+
+    grid.appendChild(card);
+  }
+}
+
+// ─────────────────────────────────────────────
+// MODAL
+// ─────────────────────────────────────────────
+function openModal(film) {
+  const bg = document.getElementById("modal-bg");
+  const header = document.getElementById("modal-header");
+  const body = document.getElementById("modal-body");
+  const poster = film.affiche_url || film.jw_poster || "";
+  const platforms = film.platforms || {};
+  const year = film.annee || film.jw_year || "—";
+
+  header.innerHTML = `
+    <div class="modal-poster">
+      ${poster ? `<img src="${poster}" alt="${film.titre}">` : '<div style="width:100%;height:100%;background:var(--surface)"></div>'}
+    </div>
+    <div class="modal-info">
+      <h2>${film.titre}</h2>
+      <div class="modal-director">Réal. ${film.realisateur||"Inconnu"}</div>
+      <div class="modal-year">${year} · ${film.duree||"—"} · ${film.pays||"—"}</div>
+      <div class="modal-genre">${film.genre||""}</div>
+    </div>
+  `;
+
+  // Mapping plateforme -> cle URL dans le JSON
+  const URL_KEYS = {
+    "youtube":     "url_youtube",
+    "dailymotion": "url_dailymotion",
+    "ok.ru":       "url_ok",
+    "arte":        "url_arte",
+    "france.tv":   "url_francetv",
+    "henri":       "url_henri",
+    "tf1+":        "url_tf1",
+    "tf1":         "url_tf1",
+  };
+
+  // Générateurs de liens de recherche pour plateformes payantes
+  const SEARCH_URL_GENERATORS = {
+    "netflix":    (t) => `https://www.netflix.com/search?q=${encodeURIComponent(t)}`,
+    "prime":      (t) => `https://www.primevideo.com/search/?phrase=${encodeURIComponent(t)}`,
+    "disney":     (t) => `https://www.disneyplus.com/search/${encodeURIComponent(t)}`,
+    "canal":      (t) => `https://www.canalplus.com/recherche/?q=${encodeURIComponent(t)}`,
+    "apple":      (t) => `https://tv.apple.com/fr/search?term=${encodeURIComponent(t)}`,
+    "max":        (t) => `https://play.max.com/search?q=${encodeURIComponent(t)}`,
+    "mubi":       (t) => `https://mubi.com/fr/search?q=${encodeURIComponent(t)}`,
+  };
+
+  function getPlatformUrl(name) {
+    const key = name.toLowerCase();
+    // D'abord cherche un lien direct dans le JSON
+    for (const [k, v] of Object.entries(URL_KEYS)) {
+      if (key.includes(k)) return { url: film[v] || null, direct: true };
+    }
+    // Sinon génère un lien de recherche pour les plateformes payantes
+    const titre = film.jw_title || film.titre || "";
+    for (const [k, gen] of Object.entries(SEARCH_URL_GENERATORS)) {
+      if (key.includes(k)) return { url: gen(titre), direct: false };
+    }
+    return { url: null, direct: false };
+  }
+
+  const platEntries = Object.entries(platforms);
+  if (platEntries.length === 0) {
+    body.innerHTML = `
+      <h3>Disponibilité streaming</h3>
+      <div class="modal-no-streaming">❌ Non disponible sur les plateformes surveillées</div>
+    `;
+  } else {
+    const rows = platEntries.map(([name, types]) => {
+      const color = getPlatformColor(name);
+      const typeStr = types.join(", ");
+      const { url, direct } = getPlatformUrl(name);
+      const btnLabel = direct ? '▶ Regarder' : '🔍 Rechercher';
+
+      const linkBtn = url
+        ? `<a href="${url}" target="_blank" rel="noopener"
+              style="display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:3px;
+                     background:${color}18;border:1px solid ${color}44;color:${color};
+                     font-size:0.7rem;font-family:'DM Mono',monospace;text-decoration:none;
+                     transition:background .15s;white-space:nowrap;"
+              onmouseover="this.style.background='${color}30'"
+              onmouseout="this.style.background='${color}18'">
+              ${btnLabel}
+           </a>`
+        : `<span style="font-size:0.72rem;font-family:'DM Mono',monospace;color:var(--muted)">${typeStr}</span>`;
+
+      return `
+        <div class="modal-platform-row">
+          <div class="modal-platform-dot" style="background:${color}"></div>
+          <div class="modal-platform-name">${name}</div>
+          <div style="margin-left:auto">${linkBtn}</div>
+        </div>
+      `;
+    }).join("");
+
+    body.innerHTML = `
+      <h3>Disponible sur ${platEntries.length} plateforme${platEntries.length>1?"s":""}</h3>
+      <div class="modal-platforms">${rows}</div>
+    `;
+  }
+
+  bg.classList.add("open");
+}
+
+document.getElementById("modal-close").addEventListener("click", () => {
+  document.getElementById("modal-bg").classList.remove("open");
+});
+document.getElementById("modal-bg").addEventListener("click", (e) => {
+  if (e.target === document.getElementById("modal-bg"))
+    document.getElementById("modal-bg").classList.remove("open");
+});
+
+// ─────────────────────────────────────────────
+// DATA LOADING
+// ─────────────────────────────────────────────
+function loadData(data) {
+  allFilms = data.films || [];
+
+  const avail = allFilms.filter(f => f.available).length;
+  const pct = allFilms.length ? Math.round(100 * avail / allFilms.length) : 0;
+
+  document.getElementById("s-total").textContent = allFilms.length;
+  document.getElementById("s-available").textContent = avail;
+  document.getElementById("s-pct").textContent = pct + "%";
+
+  document.getElementById("empty-state").style.display = "none";
+  document.getElementById("grid").style.display = "grid";
+  document.getElementById("footer-bar").style.display = "flex";
+
+  if (data._demo) {
+    const notice = document.createElement("div");
+    notice.style.cssText = "position:fixed;bottom:16px;right:16px;background:#e8e7e3;border:1px solid var(--border);padding:10px 16px;border-radius:6px;font-size:0.75rem;color:var(--muted);z-index:300;font-family:DM Mono,monospace";
+    notice.innerHTML = "⚡ Mode démo — <span style='color:var(--accent)'>20 films simulés</span>";
+    document.body.appendChild(notice);
+    setTimeout(() => notice.remove(), 4000);
+  }
+
+  applyFilters();
+}
+
+// File upload
+document.getElementById("upload-zone").addEventListener("dragover", (e) => {
+  e.preventDefault();
+  document.getElementById("upload-zone").classList.add("drag-over");
+});
+document.getElementById("upload-zone").addEventListener("dragleave", () => {
+  document.getElementById("upload-zone").classList.remove("drag-over");
+});
+document.getElementById("upload-zone").addEventListener("drop", (e) => {
+  e.preventDefault();
+  document.getElementById("upload-zone").classList.remove("drag-over");
+  const file = e.dataTransfer.files[0];
+  if (file) readFile(file);
+});
+
+document.getElementById("file-input").addEventListener("change", (e) => {
+  if (e.target.files[0]) readFile(e.target.files[0]);
+});
+
+function readFile(file) {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      loadData(data);
+    } catch {
+      alert("❌ Fichier JSON invalide. Vérifiez le format.");
+    }
+  };
+  reader.readAsText(file);
+}
+
+// Demo
+document.getElementById("demo-btn").addEventListener("click", () => {
+  loadData(generateDemoData());
+});
+
+// Search
+document.getElementById("search-input").addEventListener("input", (e) => {
+  searchQuery = e.target.value.trim();
+  applyFilters();
+});
+
+// Filter chips
+document.querySelectorAll(".chip[data-filter]").forEach(chip => {
+  chip.addEventListener("click", () => {
+    document.querySelectorAll(".chip[data-filter]").forEach(c => c.classList.remove("active"));
+    chip.classList.add("active");
+    activeFilter = chip.dataset.filter;
+    applyFilters();
+  });
+});
+
+// Sort
+document.getElementById("sort-select").addEventListener("change", (e) => {
+  sortMode = e.target.value;
+  applyFilters();
+});
+</script>
+</body>
+</html>
