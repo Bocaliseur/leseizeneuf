@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-03-07T23:41:57.343174",
+  "generated_at": "2026-03-08T17:27:18.704253",
   "total_films": 1269,
   "films_trouves_justwatch": 1264,
-  "films_disponibles_streaming": 849,
+  "films_disponibles_streaming": 850,
   "films": [
     {
       "titre": "Le Voyage dans la Lune",
@@ -2345,7 +2345,7 @@
       "jw_title": "Le jour se lève",
       "jw_year": 1939,
       "jw_path": "/fr/film/le-jour-se-leve",
-      "jw_poster": "/poster/332119115/{profile}/le-jour-se-leve.{format}",
+      "jw_poster": "/poster/179537792/{profile}/le-jour-se-leve.{format}",
       "platforms": {
         "Amazon Video": [
           "Location",
@@ -7332,13 +7332,14 @@
       "pays": "Brésil",
       "genre": "Drame",
       "affiche_url": "https://media.senscritique.com/media/000006824185/300/la_parole_donnee.jpg",
-      "jw_title": "La Parole",
-      "jw_year": 1943,
-      "jw_path": "/fr/film/ordet-1943",
-      "jw_poster": "/poster/320837117/{profile}/ordet-1943.{format}",
+      "jw_title": "À voix haute : La Force de la parole",
+      "jw_year": 2017,
+      "jw_path": "/fr/film/a-voix-haute-la-force-de-la-parole",
+      "jw_poster": "/poster/117913266/{profile}/a-voix-haute-la-force-de-la-parole.{format}",
       "platforms": {
-        "Netflix": [
-          "Abonnement inclus"
+        "Amazon Video": [
+          "Location",
+          "Achat"
         ]
       },
       "available": true
@@ -7966,7 +7967,7 @@
       "jw_title": "La Femme des sables",
       "jw_year": 1964,
       "jw_path": "/fr/film/la-femme-des-sables",
-      "jw_poster": "/poster/320048306/{profile}/la-femme-des-sables.{format}",
+      "jw_poster": "/poster/309446725/{profile}/la-femme-des-sables.{format}",
       "platforms": {},
       "available": false
     },
@@ -12374,7 +12375,7 @@
       "jw_title": "Real Life",
       "jw_year": 1979,
       "jw_path": "/fr/film/real-life",
-      "jw_poster": "/poster/76148586/{profile}/real-life.{format}",
+      "jw_poster": "/poster/316062241/{profile}/real-life.{format}",
       "platforms": {},
       "available": false
     },
@@ -14407,7 +14408,7 @@
       "jw_title": "Down by Law - Sous le coup de la loi",
       "jw_year": 1986,
       "jw_path": "/fr/film/down-by-law",
-      "jw_poster": "/poster/247509998/{profile}/down-by-law.{format}",
+      "jw_poster": "/poster/318158716/{profile}/down-by-law.{format}",
       "platforms": {},
       "available": false
     },
@@ -18671,12 +18672,16 @@
       "pays": "Corée du Sud",
       "genre": "Comédie",
       "affiche_url": "https://media.senscritique.com/media/000021592602/0/attack_the_gas_station.jpg",
-      "jw_title": "L’Attaque des titans : La dernière attaque",
+      "jw_title": "L'Héritage",
       "jw_year": 2024,
-      "jw_path": "/fr/film/attack-on-titan-the-movie-the-last-attack",
-      "jw_poster": "/poster/323615852/{profile}/attack-on-titan-the-movie-the-last-attack.{format}",
-      "platforms": {},
-      "available": false
+      "jw_path": "/fr/film/lheritage-2024",
+      "jw_poster": "/poster/317926526/{profile}/lheritage-2024.{format}",
+      "platforms": {
+        "Netflix": [
+          "Abonnement inclus"
+        ]
+      },
+      "available": true
     },
     {
       "titre": "Audition",
@@ -22180,7 +22185,7 @@
       "jw_title": "Birdman",
       "jw_year": 2014,
       "jw_path": "/fr/film/birdman",
-      "jw_poster": "/poster/9817611/{profile}/birdman.{format}",
+      "jw_poster": "/poster/209645528/{profile}/birdman.{format}",
       "platforms": {
         "Netflix": [
           "Abonnement inclus"
@@ -22223,7 +22228,7 @@
       "jw_title": "Une merveilleuse histoire du temps",
       "jw_year": 2014,
       "jw_path": "/fr/film/une-merveilleuse-histoire-du-temps",
-      "jw_poster": "/poster/258831821/{profile}/une-merveilleuse-histoire-du-temps.{format}",
+      "jw_poster": "/poster/176236302/{profile}/une-merveilleuse-histoire-du-temps.{format}",
       "platforms": {
         "Amazon Video": [
           "Location",
@@ -23994,7 +23999,7 @@
       "available": true
     }
   ],
-  "fusion_notion_csv": "2026-03-08T15:39:42.648119",
+  "fusion_notion_csv": "2026-03-08T17:27:55.449844",
   "notion_matches": 1260,
   "notion_unmatched": 0,
   "plateformes_ajoutees": 76
